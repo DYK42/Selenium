@@ -13,9 +13,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CallbackTest {
 
@@ -29,13 +29,13 @@ public class CallbackTest {
 
     @BeforeEach
     void setUp() {
-//        driver = new ChromeDriver();
+        driver = new ChromeDriver();
 
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--headless");
-        driver = new ChromeDriver(options);
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("--disable-dev-shm-usage");
+//        options.addArguments("--no-sandbox");
+//        options.addArguments("--headless");
+//        driver = new ChromeDriver(options);
     }
 
     @AfterEach
@@ -80,6 +80,20 @@ public class CallbackTest {
         List<WebElement> subscribes = driver.findElements(By.className("input__sub"));
         String text = subscribes.get(1).getText();
         assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", text.trim());
+    }
+
+
+    @Test
+    void shouldNegativeCheckboxTest() throws InterruptedException {
+        driver.get("http://localhost:9999");
+        List<WebElement> elements = driver.findElements(By.className("input__control"));
+        elements.get(0).sendKeys("Васильев Василий");
+        elements.get(1).sendKeys("+79270000000");
+        driver.findElement(By.className("button")).click();
+        WebElement element = driver.findElement(By.className("checkbox"));
+        String actual = element.getAttribute("class");
+        String expected = "input_invalid";
+        assertTrue(actual.contains(expected));
     }
 
 
